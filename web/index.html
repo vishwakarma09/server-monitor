@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pusher client</title>
+	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="vendor/datatables/jquery.dataTables.min.css">
+	<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+
+	<style>
+		.highlight{
+			background-color: cyan;
+		}
+	</style>
+
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12"><h2>Server Monitor</h2></div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<input type="checkbox" id="access_logs" onclick="access_logs()"> Access Logs
+
+				<table id="access_logs_table">
+					<thead>
+						<tr>
+							<th>Domain</th>
+							<th>URL</th>
+							<th>status</th>
+							<th>AT</th>
+							<th>processing</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+
+	<script src="js/autobahn.js"></script>
+	<script>
+		var conn = new ab.Session('ws://localhost:8080',
+			function() {
+				console.log('successfully connected to websocket');
+			},
+			function() {
+				console.warn('WebSocket connection closed');
+			},
+			{'skipSubprotocolCheck': true}
+			);
+
+		var accessLogdataTable;
+		var dataSet = [];
+
+		accessLogdataTable = $('#access_logs_table').DataTable({
+			data: dataSet,
+			columns: [
+			{ client_ip : 'Client IP'},
+			{ domain: 'Domain' },
+			{ url: 'URL' },
+			{ status: 'Status' },
+			{ timestamp: 'Timestamp' },
+			{ process_time: 'Processing Time' }
+			],
+			"order": [[ 3, "desc" ]]
+		});
+
+
+		function access_logs() 
+		{
+			var checked = $('#access_logs').prop('checked');
+			if (checked) {
+				conn.subscribe('onAccessLogPush', function(topic, data) {
+					console.log(message);
+
+					let message = data.data;
+					addedRow = accessLogdataTable.row.add([1,1,1,1,1]).draw();
+
+					let addedRowNode = addedRow.node();
+        	$(addedRowNode).addClass('highlight');
+
+				});
+			}else{
+				conn.unsubscribe('onAccessLogPush');
+			}
+		}
+		
+	</script>
+</body>
+</html>
