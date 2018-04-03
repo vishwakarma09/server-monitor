@@ -14,6 +14,12 @@ If you are on PHP 7, then go in the `1.1.3` release . If your PHP version is `5.
 
 zmq installs as PHP extension, you you have to copy the `php_zmq.dll` into the *ext* folder of php and add a line in php.ini
     extension=php_zmq.dll
+    
+on Linux systems, the install step is 
+
+- install zmq by running `apt-get install php-zmq`
+
+2. update composer by `composer update`
 
 After this, you can restart apache server so that zmq is available on web interface as well ( I think we will be using that from cli only)
 If you happen to have some errors like can't find `libzmq.dll`, then copy this dll in `apache` and `php/ext` folders
