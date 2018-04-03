@@ -1,0 +1,4 @@
+on Linux systems, the install step is 
+
+- install zmq by running `apt-get install php-zmq`
+- update composer by `composer update`
