@@ -26,12 +26,20 @@ To test the logger, which reads from STDIN and writes to tcp port 5555, you can 
 
 This will show up the content so sent (test here), into the websocket frames. 
 
-Next steps:
+#Next steps:
 
 1. Formatting the apache logs in json format before sending to pusher
 2. alter code to accept json for datatable and render the data on new row in table
 3. Add functionality for other server vitals like memory, cpu, mysql processlist, etc,.
 
+#how to run
+
+- in one terminal run the push-server by `php bin/push-server`
+- in another terminal, where you have incoming access logs or any other stream of date, run *tail -f* like this:
+
+    tail -f access.laravel.local.log | php /var/www/html/server-monitor/bin/logger.php
+
+Now you just have to subscribe to topic using checkbox and now you can see realtime logs of server on your browser
 
 
 
